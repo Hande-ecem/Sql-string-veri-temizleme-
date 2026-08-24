@@ -16,3 +16,22 @@ Kampanya bazında günlük reklam performansı analiz edildi.
 
 Kullanılan Teknolojiler:
 SQL · CTE · JOIN · CASE · COALESCE · Regular Expressions · String Functions · Marketing Analytics
+----
+SQL String, NULL Handling & Marketing Analytics
+
+In this project, Facebook Ads and Google Ads data were analyzed using SQL, with a focus on data integration, string manipulation, missing value handling, and marketing performance analysis.
+
+The project includes:
+
+Combining data from multiple tables using CTEs (Common Table Expressions).
+Performing JOIN operations across Facebook and Google advertising data.
+Extracting UTM parameters from campaign URLs using string functions and Regular Expressions.
+Processing text data using functions such as LOWER and SUBSTRING.
+Handling NULL and missing values using CASE and COALESCE.
+Analyzing advertising performance metrics such as spend, impressions, clicks, leads, and conversion value.
+Calculating key marketing metrics including CTR, CPC, CPM, and ROMI.
+Using CASE statements to prevent division-by-zero errors.
+Analyzing daily advertising performance at the campaign level.
+
+Technologies & Concepts:
+SQL · CTE · JOIN · CASE · COALESCE · Regular Expressions · String Functions · Marketing Analytics
