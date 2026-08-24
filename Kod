@@ -1,0 +1,58 @@
+with facebook_ct as(
+select  fct.ad_date,fct. url_parameters,
+fct.spend, fct.impressions, fct.reach, fct.clicks, fct.leads, fct.value 
+from facebook_ads_basic_daily fct 
+left join facebook_adset fset on fset.adset_id=fct.adset_id 
+left join facebook_campaign fcam on fcam.campaign_id=fct.campaign_id ),
+all_ads_data as (
+select
+    ad_date,
+    url_parameters,
+    spend,
+    impressions,
+    reach,
+    clicks,
+    leads,
+    value
+from google_ads_basic_daily
+ union all
+ select
+    ad_date,
+    url_parameters,
+    spend,
+    impressions,
+    reach,
+    clicks,
+    leads,
+    value
+from facebook_ct
+)
+SELECT
+ad_date,
+CASE
+    WHEN LOWER(SUBSTRING(url_parameters FROM 'utm_campaign=([^&]*)')) = 'nan' THEN NULL
+    ELSE LOWER(SUBSTRING(url_parameters FROM 'utm_campaign=([^&]*)'))
+END AS utm_campaign_value,
+sum(coalesce (spend,0)) AS total_spend,
+sum(coalesce (impressions,0)) AS total_impressions,
+sum(coalesce (clicks,0)) AS total_clicks,
+sum(coalesce (value,0)) AS total_value,
+CASE
+    WHEN SUM(impressions) > 0 THEN ROUND(SUM(clicks) * 100.0 / SUM(impressions), 2)
+    ELSE 0
+END AS ctr,
+CASE
+    WHEN SUM(clicks) > 0 THEN ROUND(SUM(spend) / SUM(clicks), 2)
+    ELSE 0
+END AS cpc,
+CASE
+    WHEN SUM(impressions) > 0 THEN ROUND(1000 * SUM(spend) / SUM(impressions), 2)
+    ELSE 0
+END AS cpm,
+CASE
+    WHEN SUM(spend) > 0 THEN ROUND((SUM(value) - SUM(spend)) * 100.0 / SUM(spend), 2)
+    ELSE 0
+END AS romi
+from all_ads_data
+GROUP BY ad_date, utm_campaign_value
+ORDER BY ad_date DESC;
